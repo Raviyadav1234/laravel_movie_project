@@ -1,0 +1,704 @@
+Working with Laravel Legacy Version
+***********************************
+As we know that laravel is based upon MVC Design Pattern.
+Laravel was developed by Taylor Ottwel in 2011.
+Laravel has highest Community Licensenced Under MIT.
+Laravel uses Composer as dependency tool manager
+and Laravel gets all its packages inside vendor folder offline and online(packagist.org)
+
+
+Laravel 5.8 Version is a legacy version and has many inbuilt features
+like scaffolding.
+
+laravel scafolding
+******************
+scafolding means already made configuration or module.
+such type of structures(design pattern) are called middle-ware
+
+MVC:
+controller : is a middleware man view and model
+controller takes the request give to the moddel and update to the view
+
+How to create the database connection in Laravel
+************************************************
+create the database using phpmyadmin
+and add that database name in .env file
+.env is same file as dbconnect.php
+
+.env(dot env) is environment variables based file which holds all the major configuration of your project, database connection, Application key ...etc
+mail configuration or Even AWS Configuration.
+
+
+Redis concept in Laravel
+*************************
+In Order to optimise the site we need perform few techniques these technique are called site Optimistion Techniques
+1. Cache Management(Project perfomance Css,js,images..)loding
+   1. cache
+   2. Redis
+2. Query management(Query performance)
+   1. Indexes
+   2. Views
+   3. Stored procedures
+
+
+Diifernce b/w Norman Query and Stored procedure
+***********************************************
+Normal Query : it is Directly executed by tha database Engine(INNODB, MYISAM)
+Transactional Query : it is directly executed by the INNODB Engine but not MyISAM Engine.
+Hence we need Stored Procedures such that they are stored in a chache memory so that at first call they behave like normal Query but for the second time since it is loaded from cache Query Performed is Enhanced.
+
+
+Differance b/w MYISAM and INNODB
+********************************
+MYISAM is used for Non Transaction Query
+but high performance and low record holding capacity.
+
+INNODB is used to perform transactional Queries but performance is slow but that data security is high since it stores all the data in encrypted format hence we may required to use stored procedures, views of query optimisation.
+
+But in Laravel Orm(Object Relational mapping(model)) and Eloquent Query builder generates stored procedure for your Query.
+
+problem with Laravel
+********************
+Laravel Internally uses Cache Managemant Technique
+during development you may require to performe following task repeatedly
+1. Clear the Cache
+2. CLI server reboot
+
+how to clear cache
+*****************
+artisan Command:
+
+Note: artisan is CLI tool which can be to perform following run inbuilt
+ server, change port, create model, controller, migration, middle scafolding...
+our cache clearing in Laravel.
+
+in php artisan every Command or Options being given is a part of command line argument which perform a particular task.
+
+php artisan--help
+              |---->command line argument
+
+ few Important Commands
+ php artisan serve : to run cli Server
+ php artisan serve --post <port no> : to change the ort no
+php artisan make:<Module_name>
+
+for example
+Controller Making
+php artisan make:controller <controller_name_without_php_extenxin>
+eg.
+php artisan make:model User
+
+Note:: Every Model is Linked with Migrations
+Note:: Model is related to database part like query building, running queries etc since laravel is uses pure object oriented design pattern
+every thing in laravel is a object
+so model in a larevel also a object(ORM)
+
+What is the by default Model used in laravel.
+ans Elouquent MOdel
+Query Builder ORM(Doctrine ORM)
+
+
+Every Model is Related to Database
+All the important files related to database will inside
+database
+       |factories : It create object for MOdel
+       |migration: it holds database schema in a file
+          function up() : create the migration and commit it
+          function down() : roolback the migration which is last committed
+       
+       |seeds:
+       DtabaseSeeder.php
+       creates the data seeds for any model which can be feeded in to the table when migration is performed.
+
+       How to seed the database
+       php artisan db:seed
+       
+In order to clear cache:
+************************
+php artisan cache: clear
+php artisan cache: restore
+
+for more details contact --help command in artisan
+php artisan --help
+
+
+How to perform Migration
+*************************
+php artisan migrate
+
+
+Introduction to Scaffolding
+***************************
+Scaffolding in Laravel is a concept of predefined middleware which exist as module or package to perform basic functionality like login, register, signup and logout
+
+one Such Middleware is Auth Middleware.
+
+
+Advantage of using Scaffolding
+*******************************
+Module Reusebility
+perform basic functionality like login, register, signup, logout with session management, validation,....
+
+
+Saffolding works on basis of Middleware
+****************************************
+Middleware: It is a bussiness logic implement b/w two or more application to achieve some add on functionality is called as middleware.
+
+for example:
+messaging service
+otp service
+email authentication
+
+Each middleware is Kind of API
+API is s service and to achieve that service you need a source codem
+
+How to make Auth Middle ware
+*****************************
+php 
+
+
+By default before any migration varchar datatype max_size 255
+some database allow 255 max_size to be used
+so we need to add defaulStringLength(200);
+
+How to add schema in service provider
+************************************
+copy the names space
+use Illuminate\Support\Fascades\Schema
+from user migration file create_user_table
+and paste in App/provider/AppServiceProvider.php
+
+user Illuminate\Support\Fascades\Schema
+
+Add following line in register method
+Schema::defaultStringLength(255);
+Schema::defaultStringLength(200);
+Schema::defaultStringLength(190);
+
+make sure your cache is clear
+each time a migration is performed it is registered inside cache and databse <migration>
+
+php artisan cache:clear
+
+
+Difference b/w timestamps() and timestamp()
+timestamps(): laravel predefined method updated_at timestamp
+timestamp(<column_name>) : creates timestamp data type for a given column name.
+
+Difference b/w nullable() and index() and unique() and default()
+nullable(): is null
+index() : creates the index key 
+unique() : creates the unique key
+nullable() : is Null
+default(['mumbai','kolkata','delhi']):create the default constraint
+default('male')
+
+
+Difference B/W Integer() and bigInteger()
+Integer(): int size 11
+bigIntiger(): bigint size 14
+
+
+Difference B/W Integer() and BigIncremant()
+integer() : int size 11
+BigIncrement(): bigint size 14 + Autoincrement + PK + not Null
+
+
+Difference B/W Integer() and Increment()
+integer(): int size 11
+increment() : int size datatype : autoincrement + PK + not null
+
+
+How to make Migration
+**********************
+php artisan make:migration create_<tablename>_table
+How to see Query using migration
+use --pretend Options in Migrations Command
+php artisan migration --pretend
+
+
+How to create Scaffolding
+*************************
+Step1: clear the cache
+php artisan cache:clear
+
+Step2: make auth midleware
+php artisan make:auth
+
+
+Step3:
+Ready to go
+Start CLi Server in What ever port you want By default:8000
+php artisan serve --port 7000
+
+make the request:
+locahost:7000
+
+Can you tell me where is assets Folders in Laravel
+**************************************************
+assets
+     |css
+     |jss
+     |images
+     |icons
+
+assets is a public resources which can places inside public folder
+
+
+How to place images or icons or Uploaded Files
+**********************************************
+public
+     |images
+         |--->1.png 
+
+     |icons
+         |--->font.ttf
+
+     |uploads
+         |--->resume.doc
+
+     |css
+         |--->app.css
+
+     |js
+         |--->app.js
+
+
+How to link Assests in Laravel
+******************************
+Note that assests() is used to link the binary files
+assets() function will target public folder
+
+
+How to link
+************
+In Laravel Linking is of two types
+public Linking (inside public folder)
+path : /or ../
+Non Public Linking(root Level Outside the public Folder)
+
+Url => Routes.php
+
+Everylinking should be
+views
+    |--->layout
+             |---->app.blade.php
+
+Public 
+return view('layouts/app');
+
+Non Public 
+return view('layouts.app');
+
+How to link Public assets
+*************************
+asset('css/app.css')
+asset('js/app.js')
+asset('images/logo.png')
+asset('fonts/arial.ttf')
+
+
+Artisan Custom or user defined functionality using Artisan Command
+*******************************************************************
+What is basic difference b/w normal Coding standard and using artisan command
+
+Normal Coding Standard
+**********************
+You are the responsible for making a file and include all the neccessary because laravel strictly follows ps4-autoloading standard.
+Hence namespace must be added
+
+But if you use make: command in artisan Every Basic Namespace will be automatically.
+
+  make:auth            Scaffold basic login and registration views and routes
+  make:channel         Create a new channel class
+  make:command         Create a new Artisan command
+  make:controller      Create a new controller class
+  make:event           Create a new event class
+  make:exception       Create a new custom exception class
+  make:factory         Create a new model factory
+  make:job             Create a new job class
+  make:listener        Create a new event listener class
+  make:mail            Create a new email class
+  make:middleware      Create a new middleware class
+  make:migration       Create a new migration file
+  make:model           Create a new Eloquent model class
+  make:notification    Create a new notification class
+  make:observer        Create a new observer class
+  make:policy          Create a new policy class
+  make:provider        Create a new service provider class
+  make:request         Create a new form request class
+  make:resource        Create a new resource
+  make:rule            Create a new validation rule
+  make:seeder          Create a new seeder class
+  make:test            Create a new test class
+
+
+
+working with app signature and Env
+***********************************
+Your Env has two Env
+Development(Testing) Env
+Production(Live) Env
+
+
+Production : .env
+Development : .env-example
+
+@php -r fopen('.env') || copy('.env.examle','.env')
+this particular command is run when ever you create a project for development(scratch or clone or pull) 
+
+you will never get .env file because in gitIgnore .env is restricted.
+copy env.example to any new file
+env-copy.example Rename .env
+
+App_key is Missing in .env File
+So we need Encryption Key
+php artisan key:generate
+>Application Key Generated Sucessfully
+>php artisan cache:clear
+
+Difference B/w .env and .env.example
+************************************
+.env App_key = Encryption Key Exist
+.env.example No App Key
+
+.env Production
+.env.example Development
+
+.env.example Default Cnfiguration
+.env userdefined or application Level Configuration
+
+
+Important COmmand for Laravel Crud
+*************************************
+Consider User Table
+
+insert
+******
+$user = Users::create([
+    'name'=>'Ravi',
+    'class'=>'12th',
+    'marks'=>100
+]);
+
+
+Mass Assignment
+****************
+$users = Users::where('id',2)->update([
+   'name'=>'Ashish',
+    'class'=>'10th',
+    'marks'=>75
+]);
+
+
+Delete
+******
+$users = Users::find(1);
+or
+$users = Users::FindorFail(1);
+
+$user->delete();
+
+
+Select all
+**********
+$users = Users::all();
+All Records Select*from users_table
+
+Find single Record
+*******************
+$users = Users::find(1);
+$Query :
+select * from users where id=1
+
+if you want marks
+$users->marks
+$users->name
+$user->class
+
+
+Insert a Single Record
+**********************
+$users = new Users();
+$users->name='ravi';
+$users->marks=20;
+$users->class='12th';
+
+$users->save();
+
+
+Single Update
+****************
+$users = Users::find(1);
+$users->name='Ashish';
+$users->class='10th';
+$users->marks=100;
+
+$user->update();
+
+
+
+*************************************************
+Important Query Builder Commands for Laravel Crud
+*************************************************
+Always remember One in laravel Every thing is Object
+Why Because laravel Strictly OOPs Concept and 23+1 Design Pattern
+
+For Example Consider User Models
+5.8
+Location
+App 
+   |----->User.php
+
+   Namespace Autoloading
+   Desig Pattern : MVC
+
+^5.8*
+App
+   |----->Model
+           |----->User.php
+
+SubNamespace
+
+$user = User::get();
+Subnamespace Autoloading
+ Desig Pattern : MVC
+HMVC Stands for Heririchal Model View Controller
+Heririchal means Modular Approach
+Use Subnamespace
+
+Here Model is Also a class since it is a class and every project in lravel for class must be Encapsulated.using Namespace means follow PSR-4 Autoloading
+
+instead od using include or require we use use keyword for namespace
+Consider A Model for the table student
+student table Student.php Model
+
+class Student{
+  
+
+}
+
+Instantiable : make the object
+******************
+$student = new Student();
+or
+Non Instantiable : donot create the object Rather use static Method(Context static)
+*****************
+$student = Student::<Any_thing>;
+
+Two fields
+**********
+Student
+      |id : Non Fillable
+      |Name : Fillable
+      |Class : Fillable
+      |created_at : Non Fillable
+      |updated_at : Non Fillable
+
+
+How Laravel will Know
+*********************
+We add fillable data member in student Class Model
+
+class Student{
+  
+    protected $fillable=[
+    'name',
+    'class'
+    ];
+}
+
+Now you are ready for firing the Query
+**************************************
+Single Assignment :: Passing data using hidden Data Member
+or
+Mass Assignment :: Passing the data in form Array
+
+Note::
+Method Chaining is possible in case of oject Context
+but Method Chaining is not possible in Static Context but by implementing singleton design Pattern we use only single object Binding that means if static context is used you are allowed to use only one method chaining.
+
+Method Chaining is possible in case of oject Context
+****************************************************
+non Static context(Instance, Object scope)
+$student = new Student();
+$student->from()->where('id',1)->first_row(); //select* from student where id =1
+
+
+Method Chaining is possible in case of oject Context
+but Method Chaining is not possible in Static Context but by implementing singleton design Pattern we use only single object Binding that means if static context is used you are allowed to use only one method chaining.
+************************************************
+static Context(Non instaible class,Static Scope)
+$student = Student::all();
+$student->name = 'ravi';
+$student->class = '12th';
+$student->marks = 100;
+
+Consider This
+**************
+$student = Student::all::something; it is a crime
+$student = Student::all->something; it is not a crime
+$student = Student::all->something->otherthing->manything(); it is a Big Crime
+
+
+Crud in Laravel
+***************
+we use uery builder class formula
+
+insert: single Record Insert : (Single Concept)
+************************************************
+$student = new Student();
+$student->name = 'ravi';
+$student->class = '12th';
+$student->save();
+
+
+Update:single Record :(single Assignment)
+******************************************
+$student = Student::find(1);
+$student->name = 'ravi';
+$student->class = '12th';
+$student->save();
+
+
+How to get single Record ::(selection)
+************************************
+$student = Student::find(1);
+
+
+how to delete single record::(selction)
+***************************************
+$student = Student::find(1);
+$student->delete();
+
+How to insert using Mass Assignment
+************************************
+$student = Student::create([
+
+    'name'=>'ravi yadav',
+    'class'=>'10th',
+]);
+
+
+How to update using Mass Assignment
+************************************
+$student = Student::where('id',1)->update([
+
+    'name'=>'ravi yadav',
+    'class'=>'10th',
+]);
+
+or
+$student = Student::where('id','=',1)->update([
+
+    'name'=>'ravi yadav',
+    'class'=>'10th',
+]);
+
+or
+
+$student = Student::where('id','>',1)->update([
+
+    'name'=>'ravi yadav',
+    'class'=>'10th',
+]);
+
+or
+
+$student = Student::where('id',1)->update([
+
+    'name'=>'ravi yadav',
+    'class'=>'10th',
+    'password'=>'12345',
+]);
+
+
+how to change password in laravel using single Assignment
+*********************************
+$student = Student::find(1);
+$student->password='12345';
+$student->save();
+
+
+how to change password in laravel using single Assignment
+*********************************
+$student = Student::where('id',1)->update([
+    'password'=>'12345',
+]);
+
+
+
+How to select All Record
+************************
+The Return Type of result set will be Object
+
+$student = Student::all();
+or
+$student = Student::get();
+
+How to Iterate Objects
+**********************
+foreach($student as $student){
+  
+  echo $student->id,
+  echo $student->name,
+  echo $student->class,
+  echo $student->created_at,
+}
+
+
+if you are not using foreach the data will in format of JSON Data
+
+Very very important Question
+*****************************
+sir get() : select * from table name also support selection we can chain where() method
+sir all() : select * from table name but it only support project we cannot chain where method
+
+You want to use limit
+get() : method
+you want Order By Query
+get():method
+
+How to get record using get method but where clause
+***************************************************
+$student = Student::where('id',10)->get();
+
+how to limitise the Query
+**************************
+$student = Student::limit(10)->get();
+
+How to Pagination works
+***********************
+Pgination used when we lot of data of data like millions
+Compulsary if you select * from table name and if there is Millions load time will increase and page will not respond  keep till all record are taken out...
+
+What is logic
+Get the Total Row
+$result_set = mysqli_query($con,"select * form table name");
+$count=mysqli_num_rows($result_set);
+
+$per_page = $count/$per_page;
+            200/10
+  20 record per page
+  select * from tablename limit $data+1,$perpage;
+
+  $student = Student :: pagination(10);
+  How to use Button
+  echo "<a href='$student->links()'>Next</a>";
+
+
+
+How to work with Templates in Laravel
+**************************************
+Trick
+              include header
+master layout-
+              include footer
+
+view extends layouts
+will yield the section content
+
+
+
+
+
