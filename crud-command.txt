@@ -1,0 +1,269 @@
+What is view
+*************
+How to load view
+Route::get('/<routename>',function(){
+	return view('faq');//faq.blade.php
+});
+
+Route::view('/<route-name>','faq'); //faq.blade.php
+
+Non Public Directory Use Using HMVC
+***********************************
+resources
+     |----->views
+              |----->faq.blade.php
+
+Route::get('/<routename>',function(){
+	return view('faq');//faq.blade.php
+});
+
+Route::view('/<route-name>','faq');
+
+if you want to perform crud in faq
+if you want to perform crud in student
+if you want to perform crud in teacher
+
+the view file would be
+
+faq-show.blade.php
+faq-edit.blade.php
+faq-add.blade.php
+
+student
+      student-show.blade.php
+      student-edit.blade.php
+      student-add.blade.php
+
+teacher
+      teacher-show.blade.php
+      teacher-edit.blade.php
+      teacher-add.blade.php
+
+----------------------------------------
+Route::get('/<route-name>',function(){ |
+	return view('faq.show');           |
+});                                    |
+                                       |
+         OR                            |
+Route::get('/<route-name>',function(){ |
+	return view('faq/show');           |
+});                                    |
+----------------------------------------
+
+
+Making RestApi in Laravel
+*************************
+Where to make Route
+ routes
+     |---->api.php
+
+What is Resource Url in Api
+http://localhost:7000/api/<resource-name>
+
+How to serealize the data in json
+**********************************
+return response()->json(['code'=>200,'status'=>true,'data'=>$data]);
+
+
+Write a small Application in Laravel to create RestApi
+*********************************************************
+step-1 : create the migration with model parallely
+php artisan make:model -m
+
+php artisan make:model Contacts -m
+
+step 2: goto Migration and Modify the schema According Your Choice
+class CreateContactsTable extends Migration{
+	
+	public function up()
+    {
+        Schema::create('contacts', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->bigInteger('mobile')->unique();
+            $table->text('message')->nullable();
+            $table->timestamps();
+        });
+    }
+}
+
+step3: run migration
+php artisan migration
+or
+php artisan migration:fresh
+
+step4: In order to create Api You need to create Route mapped to controller same as web.php but this time you will create the route in api.php
+
+step5: make a Request using postman
+here 
+   |client----->postman
+   |server----->Laravel CLi Server
+      php artisan serve --post 7000
+
+Note:: if cli server is not you will cannot get response from server
+1. cli server is not running
+2. there is some code error in Backend
+3. there may be problem with SSL Certificate (server Admin)
+4. Cookies or Cache Problem with header
+5. Request timeout Error: This error Occurs when you try to load huge amount of data from server
+in order to optimise you must use limit
+$contacts = Contacts::limit(10)->get();
+
+
+step 6: Binding Data using controller and model
+        in api every endpoint is a resource
+        in laravel we have command to get All Resource
+        php artisan make:controller <Controller>
+
+
+step 7: creating the get request
+Route::get('/contacts','ContactController@index');
+ public function index()
+    {
+        $contacts = Contacts::all();
+
+        $response = array(
+          'code'=>200,
+          'status'=>true,
+          'message'=>'Record Found',
+          'data'=>$contacts
+        );
+
+        return response()->json($response);
+
+    }
+
+
+step 8: Create the post Request
+Note:: in web.php Route post request requires Csrf_token verification
+but in api.php csrf_token is not reuired
+
+in the postman select POST http method
+set the header to key = content-Type value = application/json
+clear the history of postman
+  Now create the post route and map it to store method
+  Route::post('/contacts/create','ContactController@store');
+  public function store(Request $request)
+    {
+        echo "ok";
+    }
+
+
+
+step 9: get Request for single resource
+Route::get('/contacts/{id}','ContactController$show');
+
+Note:: Consider the route
+Route::get('/contacts/{$id}',function($id){
+	
+});
+  id placeholder becomes argument in anonymous function
+
+Consider Another Route
+Route::get('/contacts/{id}/{name}','ContactController$show')
+
+public function show($id,$name){
+	
+}
+
+make the Route for single Resource
+Route::get('/contacts/{id}','ContactController@show');
+
+public function show($id){
+	$errors = array();
+	$data = array();
+	$response = array();
+
+	if(is_null($id) or empty($id)){
+	$errors['id']='is missing';
+	}elseif(isset($id)){
+      $contacts = Contacts::find($id);
+      if(count($contacts)>0){
+         $data[] = $contacts;
+      }else{
+        $data[] = [];
+        $errors['id'] = 'Invalid id Supplied';
+        $response['code'] = 201;
+        $response['status'] = false;
+        $response['data'] = $data;
+        $response['message'] = ;
+        $response['code'] = 201;
+        $response['code'] = 201;
+      }
+	}
+
+}
+
+
+step 10: how to create delete request for resource
+create the route
+Route
+
+
+
+step 11: how to update request for resource
+       creating the update route in a Resource
+       Create the update Route and map it to controller
+
+Route::put('/contacts','ContactController@update');
+
+public function update(Request $request,$id){
+	
+}
+
+**How to sent put request
+  select Put http method in postman bind the params as a key and value pair
+
+
+Note:: whenever you update the fieldset and timestamp are not present in migration then in that case you need to disable timestamp check
+so in the model add the following property just like
+protected $fillable;
+public $timestamp = false;
+   created_at =disable;
+   updated_at =disable;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
