@@ -1,0 +1,23 @@
+
+#outer{
+	height: 200px;
+	width: 50%;
+	position: relative;
+	left:25%;
+	background: lightgray;
+	padding: 1%;
+}
+
+#txt1{
+	height: 50px;
+	width: 50%;
+
+
+}
+
+::-webkit-input-placeholder {
+  position: relative;
+  left: 30px;
+  font-size: 20px;
+
+}

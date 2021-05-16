@@ -1,0 +1,369 @@
+How to create you own custom package without object oriented
+**************************************************************
+Approach in Laravel
+-------------------------------------------
+Here Package name helpers Package          |
+step 1: goto App                           |
+              |---Create a folder Helpers  |
+ <laravel-project>                         |
+       |                                   |
+       app                                 |
+        |--->Helpers                       |
+               |----->debugger_helper.php  |
+               |----->debugger_helper.php  |
+--------------------------------------------
+
+
+----------------------------------------------------------------------------------------|
+step 2:																					|
+Laravel will never know about custom package you have created because already there are | multiple package and you are also not following the PSR-4 Standard					  |
+																						|
+we need to add path : app/Helpers/debuger_helper.php									|
+add this path as autoload key in composer.json											|
+																						|
+composer.json																			|
+search for the key "autoload"															|
+"autoload":{																			|
+	"psr-4":{																			|
+	....																				|																						|
+	},																					|
+	"files":[																			|
+"app/Helpers/debugger_helper.php"														|
+	],																					|
+}																						|
+-----------------------------------------------------------------------------------------
+
+
+Step :3 Now also if you try Access the function declared inside laravel project this will not work. because laravel uses composer/autoload.php files for autoloading the package
+
+You need to update composer.json files
+
+step 4: Dump a new Autoload files in composer.json
+composer dump-autoload
+
+How to create your own funtion in Any framework
+************************************************
+convention
+function <function-name>(){
+	
+}
+
+if(!function_exist('print')){
+	function <function-name>(){
+
+	}else{
+	  echo 'print function Already Exist';
+	}
+}
+
+
+Named Routes
+**************
+url() generates the static Routes
+if you change the Route tommarow then you need to change the url views also
+but if you have named route then even if you change route 100 times
+then also route in views will change Automatically
+
+
+Syntax
+Route::any_method('/<route-name>','Controllername@methodname')->name('anyname')
+
+here we have used name function mapped with Routes in views
+route('anyname');
+
+
+How Laravel Creates Foriegn Key
+********************************
+model Post-----Table posts
+model user-----Table users
+
+foriegn key : posts
+                 |-->id pk
+
+users
+     |--->id pk
+FK : user_id => <model_name>_<pk_name>
+
+Table articles model artical pk art_id
+FK = artical_art_id
+
+
+
+
+<span style="color: red">
+	<?php isset($myerrors['login_error'])?print($myerrors['login_error']):"";?>
+</span>
+<form action="{{route('admin.login')}}" method="post">
+	@csrf
+	<p>
+		Login Id : <input type="text" name="login_id">
+<span style="color: red">
+	<?php isset($myerrors['login_id'])?print($myerrors['login_id']):"";?>
+</span>
+	</p>
+
+	<p>
+		Password : <input type="text" name="password">
+	<span style="color: red">
+	<?php isset($myerrors['password'])?print($myerrors['password']):"";?>
+</span>
+	</p>
+
+	<p>
+		<input type="submit" name="login" value="Login">
+	</p>
+</form>
+
+
+
+How to work with session in Laravel
+***********************************
+You can use session two ways in Laravel
+1. By using global function : session('keyname','value');
+2. By using session Method which is Method of Request Object
+    $request->session()->get('key')//keyname
+    $request->session()->put('keyname','value') key and value
+    you can also store Entire Array
+    $request->session()->put(['key1'=>'value1','key2','value2']);
+
+
+
+How to do All session Destroy
+-------------------------------------
+$request->session()->flush(); //session all destroy
+
+How to destroy single session
+------------------------------
+$request->session()->forget('keyname');
+
+How to check that sesson is available
+--------------------------------------
+$request->session()->has('keyname');
+
+How to check that session key exist
+--------------------------------------
+$request->session()->has('keyname');  //True or Null or False
+
+How to check that session key exist but value dose not exist
+--------------------------------------
+$request->session()->exist('keyname');
+
+in Laravel you can use session in following ways
+1. files system
+2.database
+3.Cookies
+4.redis library
+5.cache
+
+All these setting are available config/session.php
+Now How Laravel Path System Works
+Route::get('learn/path',function(){
+	
+	//Working with Laravel Path File System
+	prx(storage_path(),false);
+	prx(app_path(),false);
+	prx(config_path(),false);
+
+	prx(app_path('Helpers'),false);
+	$laravel_session = storage_path('framework\session');
+	prx($laravel_session);
+});
+
+
+session in laravel are of three types
+--------------------------------------
+1. Cachable Session
+2. Persistent Session(Permanent Session): at any request data remains
+   number of request can be sent and session wont destroy
+
+3. Temperory Session : flash session
+            Temperory session are used for flash data : message or error
+             data will available for single session
+
+
+**All the Above methods are for Persistent session**
+  for flash data session
+  $request->session->flash('keyname','message');
+  $request->session->flash('message','Invalid loginid or password');
+
+
+Hacker can perform Session Hijacking
+in order to protect this we can regenerate the session_id
+$request->session()->regenerate();
+
+
+What is cachable session in Laravel
+**************************************
+session Generate tmp
+                  |--sess_t6373etbjajbxjvk7gsugi2gdwvd
+                      file based session file
+                   if you can hold the file based session inside a variable and then set it into cache or database or cookie using file based session. then these sessions has been cached and called as cachable session.
+
+
+** You can pass 2nd Argument as default value n get method of session
+$request->session()->get('key-set','default-value');
+using default value you can check condition
+
+if($request->session()->get('class')=='LKG'){
+	echo 'Session is Not Set';
+}
+
+How to get Entire Session data
+******************************
+$request->session()->all();
+
+
+How to use all session
+
+
+Parteners
+
+
+Important setting Regarding file Upoloads
+******************************************
+$path = $request->file('file-name')->store('public/partner_pic')
+$path = public/partner_pic/q6r68yactdtactcta.png
+
+After That
+convert storage/app/public---->public/storage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
